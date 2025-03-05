@@ -21,15 +21,15 @@ MCP 服务器用于supOS open-api，支持查询topic树结构，topic详情等�
 
 ## Setup
 
-### apiKey
-[获取apiKey](http://office.unibutton.com:11488/):
-   - 登录后进入DataModeling菜单 -> 查看某个具体的topic详情,找到Data Operation -> Fetch，复制ApiKey
+### 获取apiKey
+登录[supOS社区版](http://office.unibutton.com:11488/)，进入DataModeling菜单 -> 查看某个具体的topic详情，找到Data Operation -> Fetch，复制ApiKey
 
-### Usage with Claude Desktop
-这里以Claude Desktop App为例，想了解其他支持的客户端可访问[Model Context Protocol 文档](https://modelcontextprotocol.io/clients)
-添加以下内容到`claude_desktop_config.json`:
+### 使用 Claude Desktop
+这里以Claude Desktop App为例，想了解其他支持的客户端可访问[Model Context Protocol Client](https://modelcontextprotocol.io/clients)。
 
-### 使用 mcp-server-supos
+添加以下内容到`claude_desktop_config.json`，可使用以下两种方式使用该服务:
+
+### 1.使用 mcp-server-supos
  - NPX
 
 ```json
@@ -73,7 +73,7 @@ npm install mcp-server-supos -g
 }
 ```
 
-### 下载该项目本地执行
+### 2.下载该项目本地执行
 
 Install
 ```bash
