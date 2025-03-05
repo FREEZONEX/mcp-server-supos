@@ -82,42 +82,42 @@ async function getModelTopicTree(params: {
   return await response.json();
 }
 
-server.prompt("Show all topic", async () => {
-  const treeNotes: TreeNode =
-    (await getModelTopicTree({ key: "" }))?.data || {};
-  return {
-    messages: [
-      {
-        role: "user",
-        content: {
-          type: "text",
-          text: JSON.stringify(treeNotes),
-        },
-      },
-      {
-        role: "user",
-        content: {
-          type: "text",
-          text: "请根据以上数据生成json文件,且支持下载,并将数据可视化展示",
-        },
-      },
-    ],
-  };
-  // return {
-  //   prompts: [
-  //     {
-  //       name: "summarize_treeNotes",
-  //       description: "获取树节点资源",
-  //     }
-  //   ]
-  // };
-});
+// server.prompt("Show all topic", async () => {
+//   const treeNotes: TreeNode =
+//     (await getModelTopicTree({ key: "" }))?.data || {};
+//   return {
+//     messages: [
+//       {
+//         role: "user",
+//         content: {
+//           type: "text",
+//           text: JSON.stringify(treeNotes),
+//         },
+//       },
+//       {
+//         role: "user",
+//         content: {
+//           type: "text",
+//           text: "请根据以上数据生成json文件,且支持下载,并将数据可视化展示",
+//         },
+//       },
+//     ],
+//   };
+//   // return {
+//   //   prompts: [
+//   //     {
+//   //       name: "summarize_treeNotes",
+//   //       description: "获取树节点资源",
+//   //     }
+//   //   ]
+//   // };
+// });
 
 server.tool(
   "get-model-topic-tree",
   {
     key: z.string().optional().describe("Fuzzy search keyword for child nodes"),
-    showRec: z.string().optional().describe("Number of records to display"),
+    showRec: z.boolean().optional().describe("Is show recommend topic"),
     type: z
       .string()
       .optional()
@@ -125,9 +125,9 @@ server.tool(
   },
   async (args) => {
     const trees = await getModelTopicTree({
-      key: "",
+      key: _.isNil(args.key) ? "" : `${args.key}`,
       showRec: _.isNil(args.showRec) ? "false" : `${args.showRec}`,
-      type: _.isNil(args.showRec) ? "1" : `${args.type}`,
+      type: _.isNil(args.type) ? "1" : `${args.type}`,
     });
     return {
       content: [{ type: "text", text: JSON.stringify(trees) }],

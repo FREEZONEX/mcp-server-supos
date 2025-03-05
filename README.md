@@ -50,8 +50,8 @@ MCP 服务器用于supOS open-api，支持查询topic树结构，topic详情等�
 }
 ```
 
-由于Windows环境下`npx`执行可能有环境变量的问题，可以先本地安装`mcp-server-supos`包，再用`node`本地执行：
- -Node
+- 由于Windows环境下`npx`执行可能有环境变量的问题，可以先本地安装`mcp-server-supos`包，再用`node`本地执行：
+
 ```bash
 npm install mcp-server-supos -g
 ```
