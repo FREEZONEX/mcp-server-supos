@@ -1,0 +1,32 @@
+{
+  "name": "mcp-server-supos",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && shx chmod +x dist/*.js"
+  },
+  "bin": {
+    "mcp-server-supos": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "supos",
+    "mcp"
+  ],
+  "author": "liuyanqiu",
+  "license": "ISC",
+  "description": "supos mcp server",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/node-fetch": "^2.6.12",
+    "shx": "^0.3.4",
+    "typescript": "^5.8.2"
+  }
+}
