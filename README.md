@@ -43,7 +43,7 @@ MCP 服务器用于supOS open-api，支持查询topic树结构，topic详情等�
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "http://office.unibutton.com:11488"
+        "SUPOS_API_URL": "<API_URL>"
       }
     }
   }
@@ -66,7 +66,7 @@ npm install mcp-server-supos -g
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "http://office.unibutton.com:11488"
+        "SUPOS_API_URL": "<API_URL>"
       }
     }
   }
@@ -95,7 +95,7 @@ npm run build
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "http://office.unibutton.com:11488"
+        "SUPOS_API_URL": "<API_URL>"
       }
     }
   }

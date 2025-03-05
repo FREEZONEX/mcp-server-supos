@@ -21,7 +21,7 @@ const server = new McpServer(
 const SUPOS_API_KEY =
   process.env.SUPOS_API_KEY;
 const SUPOS_API_URL =
-  process.env.SUPOS_API_URL || "http://office.unibutton.com:11488";
+  process.env.SUPOS_API_URL;
 
 if (!SUPOS_API_KEY) {
   console.error("SUPOS_API_KEY environment variable is not set");
