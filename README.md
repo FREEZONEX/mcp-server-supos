@@ -1,7 +1,13 @@
 # supOS MCP Server
 
-MCP 服务器用于supOS open-api，支持查询topic树结构，topic详情等。
+本MCP服务器是基于Model Context Protocol (MCP)[https://modelcontextprotocol.io/introduction]协议提供的typescript-sdk进行开发，可以让任何支持MCP协议的客户端使用它。
+它提供了一系列supOS open-api的功能，例如：查询topic树结构，topic详情等。
+
+接下来跟随文档一起使用吧
+
+# 系统要求
 本服务基于typescript-sdk开发，需要具备Node.js环境
+
 
 ## Tools
 
@@ -22,7 +28,7 @@ MCP 服务器用于supOS open-api，支持查询topic树结构，topic详情等�
 ## Setup
 
 ### 获取apiKey
-登录[supOS社区版](http://office.unibutton.com:11488/)，进入DataModeling菜单 -> 查看某个具体的topic详情，找到Data Operation -> Fetch，复制ApiKey
+登录[supOS社区版](https://supos-demo.supos.app/)，进入DataModeling菜单 -> 查看某个具体的topic详情，找到Data Operation -> Fetch，复制ApiKey
 
 ### 使用 Claude Desktop
 这里以Claude Desktop App为例，想了解其他支持的客户端可访问[Model Context Protocol Client](https://modelcontextprotocol.io/clients)。
