@@ -36,10 +36,11 @@
 - 为 `Claude for Desktop` 配置所需的MCP 服务器。
 
 - - 在文本编辑器中打开您的 `Claude for Desktop` 配置：`~/Library/Application Support/Claude/claude_desktop_config.json`。
-- - 也可以通过` File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件：
-![alt text](image.png)
-![alt text](image-1.png)
-- - 添加以下内容到`claude_desktop_config.json`:
+- - 也可以通过 `File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件：
+![alt text](./public/image.png)
+![alt text](./public/image-1.png)
+- - 添加以下内容到 `claude_desktop_config.json`，并重启应用:  
+*注意：每次修改配置后都需要重启应用才会生效。*
 
     ```json
     {
@@ -60,7 +61,7 @@
     ```
 - - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可。
 
-注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但npx在Windows系统下读取环境变量`env`配置时可能会出错，因此可以采用下面方式解决：
+**注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但 `npx` 在 `Windows` 系统下读取环境变量 `env` 配置时可能会出错，因此可以采用下面方式解决：**
 
 ### 本地运行服务
 以下两种方式选择一种即可：
@@ -74,7 +75,7 @@ npm install mcp-server-supos -g
 
 2. 找到安装的包路径，例如： `"C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"`
 
-3. 修改 `claude_desktop_config.json` 的配置
+3. 修改 `claude_desktop_config.json` 的配置，并重启应用
 ```json
 {
   "mcpServers": {
@@ -94,7 +95,7 @@ npm install mcp-server-supos -g
 
 - 下载本仓库源码本地编译执行
 
-1. 复制仓库地址:
+1. 复制仓库:
 ```bash
 git clone https://github.com/FREEZONEX/mcp-server-supos.git
 ```
@@ -106,7 +107,7 @@ npm ci
 ```bash
 npm run build
 ```
-4. 修改 `claude_desktop_config.json` 的配置
+4. 修改 `claude_desktop_config.json` 的配置，并重启应用
 ```json
 {
   "mcpServers": {
@@ -126,6 +127,6 @@ npm run build
 
 ### 结语
 以上就是使用该服务的全部教程，配置成功后可在以下面板中看到对应的服务和工具等：
-![alt text](image-2.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
+![alt text](./public/image-2.png)
+![alt text](./public/image-3.png)
+![alt text](./public/image-4.png)
