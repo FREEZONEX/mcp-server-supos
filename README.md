@@ -11,7 +11,7 @@
    - 查询topic 树结构菜单数据
    - 输入:
      - `key` (string): Fuzzy search keyword for child nodes
-     - `showRec` (string): Number of records to display
+     - `showRec` (boolean): Number of records to display
      - `type` (string): Search type: 1--Text search, 2--Tag search
    - 返回: topic 树结构菜单数据
 
