@@ -1,16 +1,12 @@
 # supOS MCP Server
 
-本MCP服务器是基于Model Context Protocol (MCP)[https://modelcontextprotocol.io/introduction]协议提供的typescript-sdk进行开发，可以让任何支持MCP协议的客户端使用它。
-它提供了一系列supOS open-api的功能，例如：查询topic树结构，topic详情等。
+本MCP服务器是基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 协议提供的 `typescript-sdk` 进行开发，可以让任何支持MCP协议的客户端使用它。 
 
-接下来跟随文档一起使用吧
+它提供了一系列supOS的open-api，例如：查询topic树结构，topic详情等。
 
-# 系统要求
-本服务基于typescript-sdk开发，需要具备Node.js环境
+## 支持的API
 
-
-## Tools
-
+### Tools
 1. `get-model-topic-tree`
    - 查询topic 树结构菜单数据
    - 输入:
@@ -25,52 +21,67 @@
      - `topic` (string): The topic path corresponding to the model
    - 返回: 某个topic详情
 
-## Setup
+***接下来跟随文档一起使用吧***
 
-### 获取apiKey
-登录[supOS社区版](https://supos-demo.supos.app/)，进入DataModeling菜单 -> 查看某个具体的topic详情，找到Data Operation -> Fetch，复制ApiKey
+## 开始使用
 
-### 使用 Claude Desktop
-这里以Claude Desktop App为例，想了解其他支持的客户端可访问[Model Context Protocol Client](https://modelcontextprotocol.io/clients)。
+### 系统要求
+- Node.js
 
-添加以下内容到`claude_desktop_config.json`，可使用以下两种方式使用该服务:
+### 安装客户端
+目前支持MCP协议的客户端已有很多，比如桌面端应用 `Claude for Desktop`，或者IDE的一些插件等（`VSCode` 的 `Cline` 插件），想了解已支持的客户端可访问 [Model Context Protocol Client](https://modelcontextprotocol.io/clients)。
 
-### 1.使用 mcp-server-supos
- - NPX
+这里以 `Claude for Desktop` 为例。
+- 下载 [Claude for Desktop](https://claude.ai/download)。
+- 为 `Claude for Desktop` 配置所需的MCP 服务器。
 
-```json
-{
-  "mcpServers": {
-    "supos": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-supos"
-      ],
-      "env": {
-        "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "<API_URL>"
+- - 在文本编辑器中打开您的 `Claude for Desktop` 配置：`~/Library/Application Support/Claude/claude_desktop_config.json`。
+- - 也可以通过` File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件：
+![alt text](image.png)
+![alt text](image-1.png)
+- - 添加以下内容到`claude_desktop_config.json`:
+
+    ```json
+    {
+      "mcpServers": {
+        "supos": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "mcp-server-supos"
+          ],
+          "env": {
+            "SUPOS_API_KEY": "<API_KEY>",
+            "SUPOS_API_URL": "<API_URL>"
+          }
+        }
       }
     }
-  }
-}
-```
+    ```
+- - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可。
 
-- NODE
+注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但npx在Windows系统下读取环境变量`env`配置时可能会出错，因此可以采用下面方式解决：
 
-由于Windows环境下`npx`执行可能有环境变量的问题，可以先本地安装`mcp-server-supos`包，再用`node`本地执行：
+### 本地运行服务
+以下两种方式选择一种即可：
 
+- 本地安装 `mcp-server-supos`，并通过node运行
+
+1. Install
 ```bash
 npm install mcp-server-supos -g
 ```
 
+2. 找到安装的包路径，例如： `"C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"`
+
+3. 修改 `claude_desktop_config.json` 的配置
 ```json
 {
   "mcpServers": {
     "supos": {
       "command": "node",
       "args": [
-        "C://Users//xxx//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"
+        "C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
@@ -81,18 +92,21 @@ npm install mcp-server-supos -g
 }
 ```
 
-### 2.下载该项目本地执行
+- 下载本仓库源码本地编译执行
 
-Install
+1. 复制仓库地址:
+```bash
+git clone https://github.com/FREEZONEX/mcp-server-supos.git
+```
+2. 安装依赖
 ```bash
 npm ci
 ```
-
-Build
+3. 编译
 ```bash
 npm run build
 ```
-
+4. 修改 `claude_desktop_config.json` 的配置
 ```json
 {
   "mcpServers": {
@@ -109,3 +123,9 @@ npm run build
   }
 }
 ```
+
+### 结语
+以上就是使用该服务的全部教程，配置成功后可在以下面板中看到对应的服务和工具等：
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
