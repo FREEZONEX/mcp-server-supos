@@ -36,11 +36,12 @@
 - 为 `Claude for Desktop` 配置所需的MCP 服务器。
 
 - - 在文本编辑器中打开您的 `Claude for Desktop` 配置：`~/Library/Application Support/Claude/claude_desktop_config.json`。
-- - 也可以通过 `File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件：
+- - 也可以通过 `File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件位置：
 ![alt text](./public/image.png)
 ![alt text](./public/image-1.png)
-- - 添加以下内容到 `claude_desktop_config.json`，并重启应用:  
-*注意：每次修改配置后都需要重启应用才会生效。*
+![alt text](./public/image-6.png)
+- - 打开配置文件后，添加以下内容到 `claude_desktop_config.json`中，并重启应用:  
+*注意：每次修改该配置文件后都需要重启应用才会生效。*
 
     ```json
     {
