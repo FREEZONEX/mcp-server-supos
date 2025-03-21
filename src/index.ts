@@ -18,10 +18,23 @@ const server = new McpServer(
   }
 );
 
-const SUPOS_API_KEY =
-  process.env.SUPOS_API_KEY;
-const SUPOS_API_URL =
-  process.env.SUPOS_API_URL;
+let SUPOS_API_KEY =
+  process.env.SUPOS_API_KEY || "4174348a-9222-4e81-b33e-5d72d2fd7f1e";
+let SUPOS_API_URL =
+  process.env.SUPOS_API_URL || "http://office.unibutton.com:11488/";
+
+// Command line argument parsing
+// const args = process.argv.slice(1);
+// if (args.length !== 0) {
+//   SUPOS_API_URL = args?.[0];
+//   SUPOS_API_KEY = args?.[1];
+// }
+// console.log('args',args);
+
+if (!SUPOS_API_URL) {
+  console.error("SUPOS_API_URL environment variable is not set");
+  process.exit(1);
+}
 
 if (!SUPOS_API_KEY) {
   console.error("SUPOS_API_KEY environment variable is not set");
@@ -135,7 +148,7 @@ server.tool(
   }
 );
 
-server.tool("get-model-topic-detail", {topic: z.string()}, async (args) => {
+server.tool("get-model-topic-detail", { topic: z.string() }, async (args) => {
   const detail = await getModelTopicDetail(args.topic);
   return {
     content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
