@@ -20,6 +20,16 @@
    - 输入:
      - `topic` (string): The topic path corresponding to the model
    - 返回: 某个topic详情
+3. `get-topic-realtime-data`
+   - 获取某个topic的实时数据
+   - 输入:
+     - `topic` (string): The topic path corresponding to the model
+   - 返回: 某个topic实时数据
+4. `get-all-topic-realtime-data`
+   - 获取所有topic的实时数据并分析
+   - 输入:
+     - `topic` (string): The topic path corresponding to the model
+   - 返回: 所有topic实时数据
 
 ***接下来跟随文档一起使用吧***
 
@@ -54,13 +64,14 @@
           ],
           "env": {
             "SUPOS_API_KEY": "<API_KEY>",
-            "SUPOS_API_URL": "<API_URL>"
+            "SUPOS_API_URL": "<API_URL>",
+            "SUPOS_MQTT_URL": "<MQTT_URL>"
           }
         }
       }
     }
     ```
-- - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可。
+- - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可，`MQTT_URL`可通过访问 `UNS -> MqttBroker -> Listeners` 查看可订阅的地址。
 
 **注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但 `npx` 在 `Windows` 系统下读取环境变量 `env` 配置时可能会出错，因此可以采用下面方式解决：**
 
@@ -87,7 +98,8 @@ npm install mcp-server-supos -g
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "<API_URL>"
+        "SUPOS_API_URL": "<API_URL>",
+        "SUPOS_MQTT_URL": "<MQTT_URL>"
       }
     }
   }
@@ -119,7 +131,8 @@ npm run build
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
-        "SUPOS_API_URL": "<API_URL>"
+        "SUPOS_API_URL": "<API_URL>",
+        "SUPOS_MQTT_URL": "<MQTT_URL>"
       }
     }
   }
@@ -131,3 +144,6 @@ npm run build
 ![alt text](./public/image-2.png)
 ![alt text](./public/image-3.png)
 ![alt text](./public/image-4.png)
+
+### 最后的最后
+[supOS社区版](https://supos-demo.supos.app/) 已集成 `CopilotKit` 作者开源的 [open-mcp-client](https://github.com/CopilotKit/open-mcp-client)，并内置了 `mcp-server-supos` 服务，且支持ts版本的 `agent`，源码可访问 [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient)。
