@@ -27,8 +27,6 @@
    - 返回: 某个topic实时数据
 4. `get-all-topic-realtime-data`
    - 获取所有topic的实时数据并分析
-   - 输入:
-     - `topic` (string): The topic path corresponding to the model
    - 返回: 所有topic实时数据
 
 ***接下来跟随文档一起使用吧***
