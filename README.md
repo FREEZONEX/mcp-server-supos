@@ -1,59 +1,63 @@
+**English** | [中文][readme-zh-link]
+
 # supOS MCP Server
 
-本MCP服务器是基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 协议提供的 `typescript-sdk` 进行开发，可以让任何支持MCP协议的客户端使用它。 
+This MCP server is developed based on the `typescript-sdk` provided by the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) protocol, allowing any client that supports the MCP protocol to use it.
 
-它提供了一系列supOS的open-api，例如：查询topic树结构，topic详情等。
+It provides a series of supOS open-apis, such as querying topic tree structure, topic details, etc.
 
 <a href="https://glama.ai/mcp/servers/7ayh12mg77">
    <img width="380" height="200" src="https://glama.ai/mcp/servers/7ayh12mg77/badge" alt="supOS Server MCP server" />
  </a>
 
-## 支持的API
+## Supported APIs
 
 ### Tools
 1. `get-model-topic-tree`
-   - 查询topic 树结构菜单数据
-   - 输入:
+   - Query topic tree structure menu data
+   - Input:
      - `key` (string): Fuzzy search keyword for child nodes
      - `showRec` (boolean): Number of records to display
      - `type` (string): Search type: 1--Text search, 2--Tag search
-   - 返回: topic 树结构菜单数据
+   - Returns: topic tree structure menu data
 
 2. `get-model-topic-detail`
-   - 获取某个topic详情
-   - 输入:
+   - Get details of a specific topic
+   - Input:
      - `topic` (string): The topic path corresponding to the model
-   - 返回: 某个topic详情
+   - Returns: details of a specific topic
+
 3. `get-topic-realtime-data`
-   - 获取某个topic的实时数据
-   - 输入:
+   - Get real-time data of a specific topic
+   - Input:
      - `topic` (string): The topic path corresponding to the model
-   - 返回: 某个topic实时数据
+   - Returns: real-time data of a specific topic
+
 4. `get-all-topic-realtime-data`
-   - 获取所有topic的实时数据并分析
-   - 返回: 所有topic实时数据
+   - Get and analyze real-time data of all topics
+   - Returns: real-time data of all topics
 
-***接下来跟随文档一起使用吧***
+***Let's follow the documentation to start using it***
 
-## 开始使用
+## Getting Started
 
-### 系统要求
+### System Requirements
 - Node.js
 
-### 安装客户端
-目前支持MCP协议的客户端已有很多，比如桌面端应用 `Claude for Desktop`，或者IDE的一些插件等（`VSCode` 的 `Cline` 插件），想了解已支持的客户端可访问 [Model Context Protocol Client](https://modelcontextprotocol.io/clients)。
+### Installing Client
+Currently, there are many clients that support the MCP protocol, such as desktop applications like `Claude for Desktop`, or IDE plugins (like the `Cline` plugin for `VSCode`). To learn about supported clients, visit [Model Context Protocol Client](https://modelcontextprotocol.io/clients).
 
-这里以 `Claude for Desktop` 为例。
-- 下载 [Claude for Desktop](https://claude.ai/download)。
-- 为 `Claude for Desktop` 配置所需的MCP 服务器。
+Here we'll use `Claude for Desktop` as an example.
+- Download [Claude for Desktop](https://claude.ai/download).
+- Configure the required MCP server for `Claude for Desktop`.
 
-- - 在文本编辑器中打开您的 `Claude for Desktop` 配置：`~/Library/Application Support/Claude/claude_desktop_config.json`。
-- - 也可以通过 `File -> Setting -> Developer` 点击 `Edit Config` 找到该配置文件位置：
+- - Open your `Claude for Desktop` configuration in a text editor: `~/Library/Application Support/Claude/claude_desktop_config.json`.
+- - You can also find this configuration file location by clicking `Edit Config` in `File -> Setting -> Developer`:
 ![alt text](./public/image.png)
 ![alt text](./public/image-1.png)
 ![alt text](./public/image-6.png)
-- - 打开配置文件后，添加以下内容到 `claude_desktop_config.json`中，并重启应用:  
-*注意：每次修改该配置文件后都需要重启应用才会生效。*
+- - After opening the configuration file, add the following content to `claude_desktop_config.json` and restart the application:  
+*Note: The application needs to be restarted after each modification of this configuration file for changes to take effect.*
 
     ```json
     {
@@ -73,23 +77,23 @@
       }
     }
     ```
-- - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可，`MQTT_URL`可通过访问 `UNS -> MqttBroker -> Listeners` 查看可订阅的地址。
+- - Where `API_URL` is the accessible address of [supOS Community Edition](https://supos-demo.supos.app/). `API_KEY` can be found by logging into the community edition, going to `DataModeling -> View specific topic details -> Data Operation -> Fetch`, and copying the corresponding ApiKey. `MQTT_URL` can be found by visiting `UNS -> MqttBroker -> Listeners` to view the subscribable address.
 
-**注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但 `npx` 在 `Windows` 系统下读取环境变量 `env` 配置时可能会出错，因此可以采用下面方式解决：**
+**Note: The above configuration of the MCP server uses `npx` to pull the `mcp-server-supos` npm package and run it locally to provide services to clients. However, `npx` may have issues reading environment variable `env` configurations on `Windows` systems, so the following solutions can be adopted:**
 
-### 本地运行服务
-以下两种方式选择一种即可：
+### Running Service Locally
+Choose one of the following two methods:
 
-- 本地安装 `mcp-server-supos`，并通过node运行
+- Install `mcp-server-supos` locally and run it through node
 
 1. Install
 ```bash
 npm install mcp-server-supos -g
 ```
 
-2. 找到安装的包路径，例如： `"C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"`
+2. Find the installed package path, for example: `"C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"`
 
-3. 修改 `claude_desktop_config.json` 的配置，并重启应用
+3. Modify the configuration in `claude_desktop_config.json` and restart the application
 ```json
 {
   "mcpServers": {
@@ -108,28 +112,28 @@ npm install mcp-server-supos -g
 }
 ```
 
-- 下载本仓库源码本地编译执行
+- Download and compile the repository source code locally
 
-1. 复制仓库:
+1. Clone the repository:
 ```bash
 git clone https://github.com/FREEZONEX/mcp-server-supos.git
 ```
-2. 安装依赖
+2. Install dependencies
 ```bash
 npm ci
 ```
-3. 编译
+3. Build
 ```bash
 npm run build
 ```
-4. 修改 `claude_desktop_config.json` 的配置，并重启应用
+4. Modify the configuration in `claude_desktop_config.json` and restart the application
 ```json
 {
   "mcpServers": {
     "supos": {
       "command": "node",
       "args": [
-        "<本地项目地址>//dist//index.js"
+        "<local project path>//dist//index.js"
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
@@ -141,11 +145,19 @@ npm run build
 }
 ```
 
-### 结语
-以上就是使用该服务的全部教程，配置成功后可在以下面板中看到对应的服务和工具等：
+### Conclusion
+That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:
 ![alt text](./public/image-2.png)
 ![alt text](./public/image-3.png)
 ![alt text](./public/image-4.png)
 
-### 最后的最后
-[supOS社区版](https://supos-demo.supos.app/) 已集成 `CopilotKit` 作者开源的 [open-mcp-client](https://github.com/CopilotKit/open-mcp-client)，并内置了 `mcp-server-supos` 服务，且支持ts版本的 `agent`，源码可访问 [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient)。
+### Final Note
+[supOS Community Edition](https://supos-demo.supos.app/) has integrated the [open-mcp-client](https://github.com/CopilotKit/open-mcp-client) open-sourced by `CopilotKit` authors, and built-in the `mcp-server-supos` service, supporting ts version `agent`. The source code can be accessed at [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient).
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
+
+<!-- Links -->
+
+[readme-zh-link]: ./README-zh.md 
