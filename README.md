@@ -1,21 +1,17 @@
 # supOS MCP Server
 
-本MCP服务器是基于Model Context Protocol (MCP)[https://modelcontextprotocol.io/introduction]协议提供的typescript-sdk进行开发，可以让任何支持MCP协议的客户端使用它。
-它提供了一系列supOS open-api的功能，例如：查询topic树结构，topic详情等。
+本MCP服务器是基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) 协议提供的 `typescript-sdk` 进行开发，可以让任何支持MCP协议的客户端使用它。 
 
-接下来跟随文档一起使用吧
+它提供了一系列supOS的open-api，例如：查询topic树结构，topic详情等。
 
-# 系统要求
-本服务基于typescript-sdk开发，需要具备Node.js环境
+## 支持的API
 
-
-## Tools
-
+### Tools
 1. `get-model-topic-tree`
    - 查询topic 树结构菜单数据
    - 输入:
      - `key` (string): Fuzzy search keyword for child nodes
-     - `showRec` (string): Number of records to display
+     - `showRec` (boolean): Number of records to display
      - `type` (string): Search type: 1--Text search, 2--Tag search
    - 返回: topic 树结构菜单数据
 
@@ -75,21 +71,28 @@
     ```
 - - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可，`MQTT_URL`可通过访问 `UNS -> MqttBroker -> Listeners` 查看可订阅的地址。
 
-- NODE
+**注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但 `npx` 在 `Windows` 系统下读取环境变量 `env` 配置时可能会出错，因此可以采用下面方式解决：**
 
-由于Windows环境下`npx`执行可能有环境变量的问题，可以先本地安装`mcp-server-supos`包，再用`node`本地执行：
+### 本地运行服务
+以下两种方式选择一种即可：
 
+- 本地安装 `mcp-server-supos`，并通过node运行
+
+1. Install
 ```bash
 npm install mcp-server-supos -g
 ```
 
+2. 找到安装的包路径，例如： `"C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"`
+
+3. 修改 `claude_desktop_config.json` 的配置，并重启应用
 ```json
 {
   "mcpServers": {
     "supos": {
       "command": "node",
       "args": [
-        "C://Users//xxx//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"
+        "C://Users//<USER_NAME>//AppData//Roaming//npm//node_modules//mcp-server-supos//dist//index.js"
       ],
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
@@ -101,18 +104,21 @@ npm install mcp-server-supos -g
 }
 ```
 
-### 2.下载该项目本地执行
+- 下载本仓库源码本地编译执行
 
-Install
+1. 复制仓库:
+```bash
+git clone https://github.com/FREEZONEX/mcp-server-supos.git
+```
+2. 安装依赖
 ```bash
 npm ci
 ```
-
-Build
+3. 编译
 ```bash
 npm run build
 ```
-
+4. 修改 `claude_desktop_config.json` 的配置，并重启应用
 ```json
 {
   "mcpServers": {
