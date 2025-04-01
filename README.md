@@ -4,6 +4,10 @@
 
 它提供了一系列supOS的open-api，例如：查询topic树结构，topic详情等。
 
+<a href="https://glama.ai/mcp/servers/7ayh12mg77">
+   <img width="380" height="200" src="https://glama.ai/mcp/servers/7ayh12mg77/badge" alt="supOS Server MCP server" />
+ </a>
+
 ## 支持的API
 
 ### Tools
