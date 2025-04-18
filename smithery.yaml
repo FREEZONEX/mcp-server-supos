@@ -24,8 +24,12 @@ startCommand:
     |-
     (config) => ({
       command: 'node',
-      args: ['dist/index.js', config.suposApiUrl, config.suposApiKey, config.suposMqttUrl],
-      env: {}
+      args: ['dist/index.js'],
+      env: {
+        "SUPOS_API_KEY": config.suposApiKey,
+        "SUPOS_API_URL": config.suposApiUrl,
+        "SUPOS_MQTT_URL": config.suposMqttUrl
+      }
     })
   exampleConfig:
     suposApiUrl: https://supos-demo.supos.app
