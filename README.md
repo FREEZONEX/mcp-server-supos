@@ -37,6 +37,15 @@ It provides a series of supOS open-apis, such as querying topic tree structure, 
    - Get and analyze real-time data of all topics
    - Returns: real-time data of all topics
 
+5. `get-topic-history-data-by-graphql`
+   - Get history data of a specific topic from graphql
+   - Input:
+     - `topic` (string): The topic path corresponding to the model
+     - `limit` (number): Limit number of records
+     - `startTime` (string): Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time
+     - `endTime`: End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time
+   - Returns: history data of a specific topic
+
 ***Let's follow the documentation to start using it***
 
 ## Getting Started

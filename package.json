@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-supos",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "type": "module",
   "scripts": {
     "build": "tsc && shx chmod +x dist/*.js"

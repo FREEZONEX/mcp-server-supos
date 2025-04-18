@@ -87,6 +87,46 @@ async function getModelTopicTree(params: {
   return await response.json();
 }
 
+async function graphqlQuery(
+  graphqlDatabase: string,
+  fields: any[],
+  whereCT: { start: string; end: string },
+  limit: number
+): Promise<any> {
+  const url = `${SUPOS_API_URL}/hasura/home/v1/graphql`;
+  const fieldsString = fields.map((field) => `${field.name}`).join("\n");
+  let whereCTString = `{}`;
+  if (whereCT.start && whereCT.end) {
+    whereCTString = `{_ct: {_lt: "${whereCT.end}", _gt: "${whereCT.start}"}}`;
+  }
+  const query = `
+    query MyQuery {
+    ${graphqlDatabase}(order_by: {_id: desc}, limit: ${limit},where: ${whereCTString}) {
+      _ct
+      _id
+      ${fieldsString}
+    }
+    }`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      apiKey: `${SUPOS_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: query,
+      variables: {},
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`SupOS API error: ${response.statusText}`);
+  }
+
+  return await response.json();
+}
+
 function getAllTopicRealtimeData() {
   // 缓存实时数据，定时写入缓存文件
   const cache = new Map();
@@ -258,6 +298,48 @@ function createMcpServer() {
       return {
         content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
       };
+    }
+  );
+
+  server.tool(
+    "get-topic-history-data-by-graphql",
+    {
+      topic: z.string().describe("Topic name"),
+      limit: z.number().optional().describe("Limit number of records"),
+      startTime: z
+        .string()
+        .optional()
+        .describe(
+          `Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time: ${new Date(
+              new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+            ).toISOString()}`
+        ),
+      endTime: z
+        .string()
+        .optional()
+        .describe(
+          `End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time: ${new Date().toISOString()}`
+        ),
+    },
+    async (args: any) => {
+      const detail = await getModelTopicDetail(args.topic);
+      const database = detail?.data?.alias || "";
+      const fields = detail?.data?.fields || [];
+      if (database) {
+        const history = await graphqlQuery(
+          database,
+          fields,
+          { start: args.startTime, end: args.endTime },
+          args.limit || 10
+        );
+        return {
+          content: [{ type: "text", text: `${JSON.stringify(history)}` }],
+        };
+      } else {
+        return {
+          content: [{ type: "text", text: "Failed to query alias" }],
+        };
+      }
     }
   );
 

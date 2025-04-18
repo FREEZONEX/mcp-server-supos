@@ -34,6 +34,14 @@
 4. `get-all-topic-realtime-data`
    - 获取所有topic的实时数据并分析
    - 返回: 所有topic实时数据
+5. `get-topic-history-data-by-graphql`
+   - 从graphql获取特定主题的历史数据
+   - 输入:
+     - `topic` (string): The topic path corresponding to the model
+     - `limit` (number): Limit number of records
+     - `startTime` (string): Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time
+     - `endTime`: End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time
+   - 返回：指定主题的历史数据
 
 ***接下来跟随文档一起使用吧***
 
