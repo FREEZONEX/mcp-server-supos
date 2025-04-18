@@ -147,13 +147,6 @@ npm run build
 }
 ```
 
-### Conclusion
-That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:
-![alt text](./public/image-2.png)
-![alt text](./public/image-3.png)
-![alt text](./public/image-4.png)
-
-
 ### Installing via Smithery
 
 To install supOS MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@FREEZONEX/mcp-server-supos):
@@ -163,7 +156,7 @@ npx -y @smithery/cli install @FREEZONEX/mcp-server-supos --client claude
 ```
 
 ### Conclusion
-That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:
+That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:  
 ![alt text](./public/image-2.png)
 ![alt text](./public/image-3.png)
 ![alt text](./public/image-4.png)
