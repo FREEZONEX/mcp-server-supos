@@ -2,6 +2,8 @@
 
 # supOS MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@FREEZONEX/mcp-server-supos)](https://smithery.ai/server/@FREEZONEX/mcp-server-supos)
+
 This MCP server is developed based on the `typescript-sdk` provided by the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) protocol, allowing any client that supports the MCP protocol to use it.
 
 It provides a series of supOS open-apis, such as querying topic tree structure, topic details, etc.
@@ -153,12 +155,19 @@ npm run build
   }
 }
 ```
-
 ### Conclusion
-That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:
+That's the complete tutorial for using this service. After successful configuration, you can see the corresponding services and tools in the following panels:  
 ![alt text](./public/image-2.png)
 ![alt text](./public/image-3.png)
 ![alt text](./public/image-4.png)
+
+### Installing via Smithery
+
+To install supOS MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@FREEZONEX/mcp-server-supos):
+
+```bash
+npx -y @smithery/cli install @FREEZONEX/mcp-server-supos --client claude
+```
 
 ### Final Note
 [supOS Community Edition](https://supos-demo.supos.app/) has integrated the [open-mcp-client](https://github.com/CopilotKit/open-mcp-client) open-sourced by `CopilotKit` authors, and built-in the `mcp-server-supos` service, supporting ts version `agent`. The source code can be accessed at [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient).
