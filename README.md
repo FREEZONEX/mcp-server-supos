@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/freezonex-mcp-server-supos-badge.png)](https://mseep.ai/app/freezonex-mcp-server-supos)
+
 **English** | [中文][readme-zh-link]
 
 # supOS MCP Server
