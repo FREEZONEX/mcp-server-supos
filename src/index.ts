@@ -10,12 +10,9 @@ import { pathToFileURL } from "url";
 
 import { createFilePath } from "./utils.js";
 
-let SUPOS_API_URL =
-  process.env.SUPOS_API_URL;
-let SUPOS_API_KEY =
-  process.env.SUPOS_API_KEY;
-let SUPOS_MQTT_URL =
-  process.env.SUPOS_MQTT_URL;
+let SUPOS_API_URL = process.env.SUPOS_API_URL;
+let SUPOS_API_KEY = process.env.SUPOS_API_KEY;
+let SUPOS_MQTT_URL = process.env.SUPOS_MQTT_URL;
 
 // Command line argument parsing
 if (process.argv.length >= 5) {
@@ -41,9 +38,7 @@ const filePath = createFilePath();
 const fileUri = pathToFileURL(filePath).href;
 
 async function getModelTopicDetail(topic: string): Promise<any> {
-  const url = `${SUPOS_API_URL}/open-api/supos/uns/model?topic=${encodeURIComponent(
-    topic
-  )}`;
+  const url = `${SUPOS_API_URL}/open-api/supos/uns/model?topic=${encodeURIComponent(topic)}`;
 
   const response = await fetch(url, {
     headers: {
@@ -167,11 +162,7 @@ function getAllTopicRealtimeData() {
   });
   // 每 5 秒批量写入一次
   timer = setInterval(() => {
-    const cacheJson = JSON.stringify(
-      Object.fromEntries(Array.from(cache)),
-      null,
-      2
-    );
+    const cacheJson = JSON.stringify(Object.fromEntries(Array.from(cache)), null, 2);
     // 将更新后的数据写入 JSON 文件
     fs.writeFile(
       filePath,
@@ -268,15 +259,9 @@ function createMcpServer() {
   server.tool(
     "get-model-topic-tree",
     {
-      key: z
-        .string()
-        .optional()
-        .describe("Fuzzy search keyword for child nodes"),
+      key: z.string().optional().describe("Fuzzy search keyword for child nodes"),
       showRec: z.boolean().optional().describe("Is show recommend topic"),
-      type: z
-        .string()
-        .optional()
-        .describe("Search type: 1--Text search, 2--Tag search"),
+      type: z.string().optional().describe("Search type: 1--Text search, 2--Tag search"),
     },
     async (args: any) => {
       const trees = await getModelTopicTree({
@@ -290,16 +275,12 @@ function createMcpServer() {
     }
   );
 
-  server.tool(
-    "get-model-topic-detail",
-    { topic: z.string() },
-    async (args: any) => {
-      const detail = await getModelTopicDetail(args.topic);
-      return {
-        content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
-      };
-    }
-  );
+  server.tool("get-model-topic-detail", { topic: z.string() }, async (args: any) => {
+    const detail = await getModelTopicDetail(args.topic);
+    return {
+      content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
+    };
+  });
 
   server.tool(
     "get-topic-history-data-by-graphql",
@@ -311,8 +292,8 @@ function createMcpServer() {
         .optional()
         .describe(
           `Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time: ${new Date(
-              new Date().getTime() - 7 * 24 * 60 * 60 * 1000
-            ).toISOString()}`
+            new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+          ).toISOString()}`
         ),
       endTime: z
         .string()
@@ -354,16 +335,12 @@ function createMcpServer() {
     };
   });
 
-  server.tool(
-    "get-topic-realtime-data",
-    { topic: z.string() },
-    async (args: any) => {
-      const realtimeData = await getTopicRealtimeData(`${args.topic}`);
-      return {
-        content: [{ type: "text", text: `${realtimeData}` }],
-      };
-    }
-  );
+  server.tool("get-topic-realtime-data", { topic: z.string() }, async (args: any) => {
+    const realtimeData = await getTopicRealtimeData(`${args.topic}`);
+    return {
+      content: [{ type: "text", text: `${realtimeData}` }],
+    };
+  });
 
   async function runServer() {
     const transport = new StdioServerTransport();
