@@ -14,16 +14,16 @@
 
 ### Tools
 
-1. `get-model-topic-tree`
+1. `get-topic-tree`
 
-   - 查询topic 树结构菜单数据
+   - 查询 topic 树结构菜单数据
    - 输入:
      - `key` (string): Fuzzy search keyword for child nodes
      - `showRec` (boolean): Number of records to display
      - `type` (string): Search type: 1--Text search, 2--Tag search
    - 返回: topic 树结构菜单数据
 
-2. `get-model-topic-detail`
+2. `get-topic-detail`
    - 获取某个topic详情
    - 输入:
      - `topic` (string): The topic path corresponding to the model

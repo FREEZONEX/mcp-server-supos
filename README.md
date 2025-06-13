@@ -14,7 +14,7 @@ It provides a series of supOS open-apis, such as querying topic tree structure, 
 
 ### Tools
 
-1. `get-model-topic-tree`
+1. `get-topic-tree`
 
    - Query topic tree structure menu data
    - Input:
@@ -23,7 +23,7 @@ It provides a series of supOS open-apis, such as querying topic tree structure, 
      - `type` (string): Search type: 1--Text search, 2--Tag search
    - Returns: topic tree structure menu data
 
-2. `get-model-topic-detail`
+2. `get-topic-detail`
 
    - Get details of a specific topic
    - Input:

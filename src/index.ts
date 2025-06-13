@@ -288,7 +288,7 @@ function createMcpServer() {
   }));
 
   server.tool(
-    "get-model-topic-tree",
+    "get-topic-tree",
     {
       key: z.string().optional().describe("Fuzzy search keyword for child nodes"),
       showRec: z.boolean().optional().describe("Is show recommend topic"),
@@ -306,12 +306,17 @@ function createMcpServer() {
     }
   );
 
-  server.tool("get-model-topic-detail", { topic: z.string() }, async (args: any) => {
-    const detail = await getModelTopicDetail(args.topic);
-    return {
-      content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
-    };
-  });
+  server.tool(
+    "get-topic-detail",
+    "查询某个topic详情，例如“查询topicA”的详情，入参为：{topic:topicA}",
+    { topic: z.string() },
+    async (args: any) => {
+      const detail = await getModelTopicDetail(args.topic);
+      return {
+        content: [{ type: "text", text: `${JSON.stringify(detail)}` }],
+      };
+    }
+  );
 
   // server.tool(
   //   "get-topic-history-data-by-graphql",
@@ -387,19 +392,16 @@ function createMcpServer() {
 
   server.tool(
     "get-topic-history-data-by-pg",
+    `输入你想要查询topic历史数据的需求，例如“查询topicA的最近10条数据”，并将输入作为prompt参数传入，例如{prompt:"查询topicA的最近10条数据"}`,
     {
-      prompt: z
-        .string()
-        .describe(
-          "The prompt message input by the user for querying the historical data of the topic should be distinguished from the prompt message required by the tool get-topic-query-sql"
-        ),
+      prompt: z.string().describe("用户输入的查询topic历史数据的提示语"),
     },
     async (args: any) => {
       return {
         content: [
           {
             type: "text",
-            text: `分析用户输入的prompt：${args.prompt}，如果用户需要查询某个topic的历史数据，可以采用以下流程进行：先查询topic的详情，获取表名和属性字段等，再生成sql语句进行pg数据库查询，其中_ct代表是createTime字段`,
+            text: `分析用户输入的prompt：${args.prompt}，如果需要查询某个topic的历史数据，请务必按照以下流程进行：先看有没有topic关联的表名等详情信息，如果没有则查询topic的详情（调用get-topic-detail工具），获取表名(alias字段)和属性字段等，再生成sql语句进行pg数据库查询，其中_ct代表是createTime字段`,
           },
         ],
       };
@@ -408,17 +410,16 @@ function createMcpServer() {
 
   server.tool(
     "get-topic-query-sql",
+    `输入你想要查询topic的SQL语句需求，例如“生成查询topicA的最近10条数据的sql”，并将输入作为prompt参数传入，例如{prompt:"生成查询topicA的最近10条数据的sql"}`,
     {
-      prompt: z
-        .string()
-        .describe("The prompt of the sql statement input by the user for querying the topic"),
+      prompt: z.string().describe("用户输入的查询sql的提示语"),
     },
     async (args: any) => {
       return {
         content: [
           {
             type: "text",
-            text: `分析用户输入的prompt：${args.prompt}，如果用户需要根据topic生成查询sql，可以采用以下流程进行：先查询topic的详情，获取表名和属性字段等，再生成sql语句，其中_ct是默认的createTime字段`,
+            text: `分析用户输入的prompt：${args.prompt}，如果用户需要根据topic生成查询sql，请务必按照以下流程进行：先看有没有topic关联的表名等详情信息，如果没有则查询topic的详情（调用get-topic-detail工具），获取表名(alias字段)和属性字段等，再根据这些信息直接生成sql语句返回，其中_ct是默认的createTime字段`,
           },
         ],
       };
