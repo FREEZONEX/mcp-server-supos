@@ -42,15 +42,27 @@ It provides a series of supOS open-apis, such as querying topic tree structure, 
    - Get and analyze real-time data of all topics
    - Returns: real-time data of all topics
 
-5. `get-topic-history-data-by-graphql`
+5. `pg-query-sql`
 
-   - Get history data of a specific topic from graphql
+   - Execute SQL queries on the pg database
    - Input:
-     - `topic` (string): The topic path corresponding to the model
-     - `limit` (number): Limit number of records
-     - `startTime` (string): Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time
-     - `endTime`: End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time
-   - Returns: history data of a specific topic
+     - `sql` (string): The SQL statement to be executed
+     - `params` (array): SQL parameter array, optional
+   - Returns: SQL query result
+
+6. `get-topic-history-data-by-pg`
+
+   - Get historical data of a specific topic
+   - Input:
+     - `prompt` (string): The prompt message input by the user for querying the historical data of the topic
+   - Returns: Step-by-step prompt for querying topic historical data, convenient for step-by-step tool calls to obtain historical data
+
+7. `get-topic-query-sql`
+
+   - Get the SQL statement for querying a specific topic
+   - Input:
+     - `prompt` (string): The prompt of the SQL statement input by the user for querying the topic
+   - Returns: Step-by-step prompt for querying the topic, convenient for step-by-step tool calls and generating SQL statements
 
 **_Let's follow the documentation to start using it_**
 
@@ -89,14 +101,15 @@ Here we'll use `Claude for Desktop` as an example.
               "env": {
                 "SUPOS_API_KEY": "<API_KEY>",
                 "SUPOS_API_URL": "<API_URL>",
-                "SUPOS_MQTT_URL": "<MQTT_URL>"
+                "SUPOS_MQTT_URL": "<MQTT_URL>",
+                "SUPOS_PG_URL": "<PG_URL>"
               }
             }
           }
         }
         ```
 
-- - Where `API_URL` is the accessible address of [supOS Community Edition](https://supos-demo.supos.app/). `API_KEY` can be found by logging into the community edition, going to `DataModeling -> View specific topic details -> Data Operation -> Fetch`, and copying the corresponding ApiKey. `MQTT_URL` can be found by visiting `UNS -> MqttBroker -> Listeners` to view the subscribable address.
+- - Where `API_URL` is the accessible address of supOS Community Edition, you can try the entry point from [here](https://supos.ai/trial). `API_KEY` is the key required for open-api access. `MQTT_URL` can be found by visiting `UNS -> MqttBroker -> Listeners` to view the subscribable address.`PG_URL` is the URL required to access the pg database, format: `postgresql://user:password@host:port/db-name`
 
 **Note: The above configuration of the MCP server uses `npx` to pull the `mcp-server-supos` npm package and run it locally to provide services to clients. However, `npx` may have issues reading environment variable `env` configurations on `Windows` systems, so the following solutions can be adopted:**
 
@@ -127,7 +140,8 @@ npm install mcp-server-supos -g
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
         "SUPOS_API_URL": "<API_URL>",
-        "SUPOS_MQTT_URL": "<MQTT_URL>"
+        "SUPOS_MQTT_URL": "<MQTT_URL>",
+        "SUPOS_PG_URL": "<PG_URL>"
       }
     }
   }
@@ -165,7 +179,8 @@ npm run build
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
         "SUPOS_API_URL": "<API_URL>",
-        "SUPOS_MQTT_URL": "<MQTT_URL>"
+        "SUPOS_MQTT_URL": "<MQTT_URL>",
+        "SUPOS_PG_URL": "<PG_URL>"
       }
     }
   }
@@ -181,7 +196,7 @@ That's the complete tutorial for using this service. After successful configurat
 
 ### Final Note
 
-[supOS Community Edition](https://supos-demo.supos.app/) has integrated the [open-mcp-client](https://github.com/CopilotKit/open-mcp-client) open-sourced by `CopilotKit` authors, and built-in the `mcp-server-supos` service, supporting ts version `agent`. The source code can be accessed at [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient).
+supOS Community Edition has integrated the [open-mcp-client](https://github.com/CopilotKit/open-mcp-client) open-sourced by `CopilotKit` authors, and built-in the `mcp-server-supos` service, supporting ts version `agent`.
 
 ## License
 

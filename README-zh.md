@@ -36,14 +36,22 @@
 4. `get-all-topic-realtime-data`
    - 获取所有topic的实时数据并分析
    - 返回: 所有topic实时数据
-5. `get-topic-history-data-by-graphql`
-   - 从graphql获取特定主题的历史数据
+5. `pg-query-sql`
+   - 对pg数据库进行sql查询
    - 输入:
-     - `topic` (string): The topic path corresponding to the model
-     - `limit` (number): Limit number of records
-     - `startTime` (string): Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time
-     - `endTime`: End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time
-   - 返回：指定主题的历史数据
+     - `sql` (string): The SQL statement to be executed
+     - `params` (array): SQL parameter array, optional
+   - 返回：sql查询结果
+6. `get-topic-history-data-by-pg`
+   - 获取某个topic的历史数据
+   - 输入:
+     - `prompt` (string): The prompt message input by the user for querying the historical data of the topic
+   - 返回：查询topic历史数据的分步流程提示语，便于分步调用工具获取历史数据
+7. `get-topic-query-sql`
+   - 获取查询某个topic的sql语句
+   - 输入:
+     - `prompt` (string): The prompt of the sql statement input by the user for querying the topic
+   - 返回：查询topic的分步流程提示语，便于分步调用工具并生成sql语句
 
 **_接下来跟随文档一起使用吧_**
 
@@ -82,14 +90,15 @@
               "env": {
                 "SUPOS_API_KEY": "<API_KEY>",
                 "SUPOS_API_URL": "<API_URL>",
-                "SUPOS_MQTT_URL": "<MQTT_URL>"
+                "SUPOS_MQTT_URL": "<MQTT_URL>",
+                "SUPOS_PG_URL": "<PG_URL>"
               }
             }
           }
         }
         ```
 
-- - 其中 `API_URL` 是可访问的[supOS社区版](https://supos-demo.supos.app/)地址。`API_KEY` 可通过登录社区版后，进入 `DataModeling -> 查看某个具体的topic详情 -> Data Operation -> Fetch`，找到对应的ApiKey复制即可，`MQTT_URL`可通过访问 `UNS -> MqttBroker -> Listeners` 查看可订阅的地址。
+- - 其中 `API_URL` 是可访问的 supOS社区版 地址，您可以从 [这里](https://supos.ai/trial) 进行尝试。`API_KEY` 是 open-api 访问所需的密钥。`MQTT_URL`可通过访问 `UNS -> MqttBroker -> Listeners` 查看可订阅的地址。`PG_URL` 是访问 pg 数据库所需的 url，格式：`postgresql://user:password@host:port/db-name`
 
 **注意：以上配置MCP服务器是借助 `npx` 拉取 `mcp-server-supos` npm包并在本地运行的方式给客户端提供服务。但 `npx` 在 `Windows` 系统下读取环境变量 `env` 配置时可能会出错，因此可以采用下面方式解决：**
 
@@ -120,7 +129,8 @@ npm install mcp-server-supos -g
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
         "SUPOS_API_URL": "<API_URL>",
-        "SUPOS_MQTT_URL": "<MQTT_URL>"
+        "SUPOS_MQTT_URL": "<MQTT_URL>",
+        "SUPOS_PG_URL": "<PG_URL>"
       }
     }
   }
@@ -158,7 +168,8 @@ npm run build
       "env": {
         "SUPOS_API_KEY": "<API_KEY>",
         "SUPOS_API_URL": "<API_URL>",
-        "SUPOS_MQTT_URL": "<MQTT_URL>"
+        "SUPOS_MQTT_URL": "<MQTT_URL>",
+        "SUPOS_PG_URL": "<PG_URL>"
       }
     }
   }
@@ -174,7 +185,7 @@ npm run build
 
 ### 最后的最后
 
-[supOS社区版](https://supos-demo.supos.app/) 已集成 `CopilotKit` 作者开源的 [open-mcp-client](https://github.com/CopilotKit/open-mcp-client)，并内置了 `mcp-server-supos` 服务，且支持ts版本的 `agent`，源码可访问 [supOS-CE-McpClient](https://github.com/FREEZONEX/supOS-CE-McpClient)。
+supOS社区版 已集成 `CopilotKit` 作者开源的 [open-mcp-client](https://github.com/CopilotKit/open-mcp-client)，并内置了 `mcp-server-supos` 服务，且支持ts版本的 `agent`。
 
 ## 许可证
 

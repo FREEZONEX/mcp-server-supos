@@ -390,7 +390,9 @@ function createMcpServer() {
     {
       prompt: z
         .string()
-        .describe("用户输入的查询topic历史数据的提示语，注意和get-topic-query-sql所需的提示语区分"),
+        .describe(
+          "The prompt message input by the user for querying the historical data of the topic should be distinguished from the prompt message required by the tool get-topic-query-sql"
+        ),
     },
     async (args: any) => {
       return {
@@ -407,7 +409,9 @@ function createMcpServer() {
   server.tool(
     "get-topic-query-sql",
     {
-      prompt: z.string().describe("用户输入的查询topic sql语句的提示语"),
+      prompt: z
+        .string()
+        .describe("The prompt of the sql statement input by the user for querying the topic"),
     },
     async (args: any) => {
       return {
