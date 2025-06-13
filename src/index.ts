@@ -7,12 +7,16 @@ import fs, { readFileSync } from "fs";
 import _ from "lodash";
 import mqtt from "mqtt";
 import { pathToFileURL } from "url";
+import { PgClient, PgConfig } from "./pgClient.js";
+import { parse as parsePgUrl } from "pg-connection-string";
 
 import { createFilePath } from "./utils.js";
 
 let SUPOS_API_URL = process.env.SUPOS_API_URL;
 let SUPOS_API_KEY = process.env.SUPOS_API_KEY;
 let SUPOS_MQTT_URL = process.env.SUPOS_MQTT_URL;
+let SUPOS_PG_URL = process.env.SUPOS_PG_URL;
+let pgConfig: PgConfig | undefined = undefined;
 
 // Command line argument parsing
 if (process.argv.length >= 5) {
@@ -32,6 +36,18 @@ if (!SUPOS_API_URL) {
 if (!SUPOS_API_KEY) {
   console.error("SUPOS_API_KEY environment variable is not set");
   process.exit(1);
+}
+
+if (SUPOS_PG_URL) {
+  // 解析postgresql://user:password@host:port/db-name
+  const parsed = parsePgUrl(SUPOS_PG_URL);
+  pgConfig = {
+    user: parsed.user || "",
+    host: parsed.host || "",
+    database: parsed.database || "",
+    password: parsed.password || "",
+    port: parsed.port ? parseInt(parsed.port) : 5432,
+  };
 }
 
 const filePath = createFilePath();
@@ -82,45 +98,45 @@ async function getModelTopicTree(params: {
   return await response.json();
 }
 
-async function graphqlQuery(
-  graphqlDatabase: string,
-  fields: any[],
-  whereCT: { start: string; end: string },
-  limit: number
-): Promise<any> {
-  const url = `${SUPOS_API_URL}/hasura/home/v1/graphql`;
-  const fieldsString = fields.map((field) => `${field.name}`).join("\n");
-  let whereCTString = `{}`;
-  if (whereCT.start && whereCT.end) {
-    whereCTString = `{_ct: {_lt: "${whereCT.end}", _gt: "${whereCT.start}"}}`;
-  }
-  const query = `
-    query MyQuery {
-    ${graphqlDatabase}(order_by: {_id: desc}, limit: ${limit},where: ${whereCTString}) {
-      _ct
-      _id
-      ${fieldsString}
-    }
-    }`;
+// async function graphqlQuery(
+//   graphqlDatabase: string,
+//   fields: any[],
+//   whereCT: { start: string; end: string },
+//   limit: number
+// ): Promise<any> {
+//   const url = `${SUPOS_API_URL}/hasura/home/v1/graphql`;
+//   const fieldsString = fields.map((field) => `${field.name}`).join("\n");
+//   let whereCTString = `{}`;
+//   if (whereCT.start && whereCT.end) {
+//     whereCTString = `{_ct: {_lt: "${whereCT.end}", _gt: "${whereCT.start}"}}`;
+//   }
+//   const query = `
+//     query MyQuery {
+//     ${graphqlDatabase}(order_by: {_id: desc}, limit: ${limit},where: ${whereCTString}) {
+//       _ct
+//       _id
+//       ${fieldsString}
+//     }
+//     }`;
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      apiKey: `${SUPOS_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: query,
-      variables: {},
-    }),
-  });
+//   const response = await fetch(url, {
+//     method: "POST",
+//     headers: {
+//       apiKey: `${SUPOS_API_KEY}`,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       query: query,
+//       variables: {},
+//     }),
+//   });
 
-  if (!response.ok) {
-    throw new Error(`SupOS API error: ${response.statusText}`);
-  }
+//   if (!response.ok) {
+//     throw new Error(`SupOS API error: ${response.statusText}`);
+//   }
 
-  return await response.json();
-}
+//   return await response.json();
+// }
 
 function getAllTopicRealtimeData() {
   // 缓存实时数据，定时写入缓存文件
@@ -233,6 +249,21 @@ function getTopicRealtimeData(subscribeTopic: string) {
   });
 }
 
+async function querySqlByPg(sql: string, params?: any[]) {
+  if (!pgConfig) {
+    return "未配置SUPOS_PG_URL环境变量";
+  }
+  const client = new PgClient(pgConfig);
+  try {
+    const result = await client.query(sql, params);
+    await client.disconnect();
+    return result;
+  } catch (err: any) {
+    await client.disconnect();
+    return err.message;
+  }
+}
+
 function createMcpServer() {
   const server = new McpServer(
     {
@@ -282,47 +313,47 @@ function createMcpServer() {
     };
   });
 
-  server.tool(
-    "get-topic-history-data-by-graphql",
-    {
-      topic: z.string().describe("Topic name"),
-      limit: z.number().optional().describe("Limit number of records"),
-      startTime: z
-        .string()
-        .optional()
-        .describe(
-          `Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time: ${new Date(
-            new Date().getTime() - 7 * 24 * 60 * 60 * 1000
-          ).toISOString()}`
-        ),
-      endTime: z
-        .string()
-        .optional()
-        .describe(
-          `End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time: ${new Date().toISOString()}`
-        ),
-    },
-    async (args: any) => {
-      const detail = await getModelTopicDetail(args.topic);
-      const database = detail?.data?.alias || "";
-      const fields = detail?.data?.fields || [];
-      if (database) {
-        const history = await graphqlQuery(
-          database,
-          fields,
-          { start: args.startTime, end: args.endTime },
-          args.limit || 10
-        );
-        return {
-          content: [{ type: "text", text: `${JSON.stringify(history)}` }],
-        };
-      } else {
-        return {
-          content: [{ type: "text", text: "Failed to query alias" }],
-        };
-      }
-    }
-  );
+  // server.tool(
+  //   "get-topic-history-data-by-graphql",
+  //   {
+  //     topic: z.string().describe("Topic name"),
+  //     limit: z.number().optional().describe("Limit number of records"),
+  //     startTime: z
+  //       .string()
+  //       .optional()
+  //       .describe(
+  //         `Start time in ISO 8601 format, e.g., 2025-04-13T00:00:00Z. If not specified, defaults to one week before the current time: ${new Date(
+  //           new Date().getTime() - 7 * 24 * 60 * 60 * 1000
+  //         ).toISOString()}`
+  //       ),
+  //     endTime: z
+  //       .string()
+  //       .optional()
+  //       .describe(
+  //         `End time in ISO 8601 format, e.g., 2025-04-20T23:59:59Z. If not specified, defaults to the current time: ${new Date().toISOString()}`
+  //       ),
+  //   },
+  //   async (args: any) => {
+  //     const detail = await getModelTopicDetail(args.topic);
+  //     const database = detail?.data?.alias || "";
+  //     const fields = detail?.data?.fields || [];
+  //     if (database) {
+  //       const history = await graphqlQuery(
+  //         database,
+  //         fields,
+  //         { start: args.startTime, end: args.endTime },
+  //         args.limit || 10
+  //       );
+  //       return {
+  //         content: [{ type: "text", text: `${JSON.stringify(history)}` }],
+  //       };
+  //     } else {
+  //       return {
+  //         content: [{ type: "text", text: "Failed to query alias" }],
+  //       };
+  //     }
+  //   }
+  // );
 
   server.tool("get-all-topic-realtime-data", {}, async () => {
     return {
@@ -341,6 +372,54 @@ function createMcpServer() {
       content: [{ type: "text", text: `${realtimeData}` }],
     };
   });
+
+  server.tool(
+    "pg-query-sql",
+    {
+      sql: z.string().describe("The SQL statement to be executed"),
+      params: z.array(z.any()).optional().describe("SQL parameter array, optional"),
+    },
+    async (args: any) => {
+      const result = await querySqlByPg(args.sql, args.params);
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }
+  );
+
+  server.tool(
+    "get-topic-history-data-by-pg",
+    {
+      prompt: z
+        .string()
+        .describe("用户输入的查询topic历史数据的提示语，注意和get-topic-query-sql所需的提示语区分"),
+    },
+    async (args: any) => {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `分析用户输入的prompt：${args.prompt}，如果用户需要查询某个topic的历史数据，可以采用以下流程进行：先查询topic的详情，获取表名和属性字段等，再生成sql语句进行pg数据库查询，其中_ct代表是createTime字段`,
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "get-topic-query-sql",
+    {
+      prompt: z.string().describe("用户输入的查询topic sql语句的提示语"),
+    },
+    async (args: any) => {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `分析用户输入的prompt：${args.prompt}，如果用户需要根据topic生成查询sql，可以采用以下流程进行：先查询topic的详情，获取表名和属性字段等，再生成sql语句，其中_ct是默认的createTime字段`,
+          },
+        ],
+      };
+    }
+  );
 
   async function runServer() {
     const transport = new StdioServerTransport();

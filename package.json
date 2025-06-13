@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-supos",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "build": "tsc && shx chmod +x dist/*.js"
@@ -23,11 +23,15 @@
     "lodash": "^4.17.21",
     "mqtt": "^5.10.4",
     "node-fetch": "^3.3.2",
+    "pg": "^8.16.0",
+    "pg-connection-string": "^2.9.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
     "@types/node-fetch": "^2.6.12",
+    "@types/pg": "^8.15.4",
+    "@types/pg-connection-string": "^2.0.0",
     "prettier": "^3.5.3",
     "shx": "^0.3.4",
     "typescript": "^5.8.2"
